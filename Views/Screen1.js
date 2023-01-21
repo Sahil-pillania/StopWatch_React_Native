@@ -6,8 +6,29 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
+import {
+  Overpass_400Regular,
+  Overpass_500Medium,
+} from "@expo-google-fonts/overpass";
+
+import { useFonts } from "expo-font";
+// import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 
 const Screen1 = () => {
+  //   const [appIsReady, setAppIsReady] = useState(false);
+  let [fontsloaded] = useFonts({
+    // Overpass_400Regular,
+    // Overpass_500Medium,
+    Regular: require("../assets/fonts/Prompt-Regular.ttf"),
+    Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
+  });
+
+  if (fontsloaded) {
+    //   return SplashScreen.hideAsync();
+    // return undefined;
+  }
+
   const [hour, setHour] = useState("00");
   const [min, setMin] = useState("00");
   const [sec, setSec] = useState("00");
@@ -41,6 +62,10 @@ const Screen1 = () => {
   };
 
   useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    // prepare();
     getHour();
     getMinute();
     getSecond();
@@ -56,6 +81,7 @@ const Screen1 = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#000" />
       <Text style={styles.hour}>{hour}</Text>
       <Text style={styles.min}>{min}</Text>
       <Text style={styles.sec}>{sec}</Text>
@@ -76,16 +102,19 @@ const Screen1 = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
     width: "100%",
     height: "100%",
+    fontFamily: "Roboto",
   },
   hour: {
     color: "white",
     fontSize: 120,
     fontWeight: "bold",
+    fontFamily: "Roboto",
   },
   min: {
     color: "white",

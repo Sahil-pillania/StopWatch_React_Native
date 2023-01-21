@@ -13,7 +13,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
+      {/* <StatusBar style="light" /> */}
       {active ? <Screen1 /> : <MainScreen />}
     </View>
   );
