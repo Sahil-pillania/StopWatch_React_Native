@@ -8,11 +8,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export default function App() {
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(true);
   const Stack = createNativeStackNavigator();
 
   setTimeout(() => {
-    setActive(true);
+    setActive(false);
   }, 2000);
 
   {
@@ -24,28 +24,34 @@ export default function App() {
   {
     /* <Screen2 /> */
   }
-  return (
-    // <View style={styles.container}>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="clock">
-        <Stack.Screen
-          name="clock"
-          component={Screen1}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="timer"
-          component={Screen2}
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-    // </View>
-  );
+  // return (
+  // <View style={styles.container}>
+  if (active) {
+    return <MainScreen />;
+  } else {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="clock">
+          <Stack.Screen
+            name="clock"
+            component={Screen1}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="timer"
+            component={Screen2}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  // </View>
+  // );
 }
 
 const styles = StyleSheet.create({
