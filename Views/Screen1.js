@@ -6,33 +6,22 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import {
-  Overpass_400Regular,
-  Overpass_500Medium,
-} from "@expo-google-fonts/overpass";
 
-import { useFonts } from "expo-font";
-// import AppLoading from "expo-app-loading";
+import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import * as SplashScreen from "expo-splash-screen";
 
-const Screen1 = () => {
-  //   const [appIsReady, setAppIsReady] = useState(false);
-  let [fontsloaded] = useFonts({
-    // Overpass_400Regular,
-    // Overpass_500Medium,
-    Regular: require("../assets/fonts/Prompt-Regular.ttf"),
-    Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
-  });
-
-  if (fontsloaded) {
-    //   return SplashScreen.hideAsync();
-    // return undefined;
-  }
-
+const Screen1 = ({ navigation }) => {
   const [hour, setHour] = useState("00");
   const [min, setMin] = useState("00");
   const [sec, setSec] = useState("00");
   const [time, setTime] = useState("PM");
+
+  const showPage = (page) => {
+    console.log(page);
+    navigation.navigate(page);
+  };
 
   const getHour = () => {
     const hour = new Date().getHours();
@@ -62,10 +51,10 @@ const Screen1 = () => {
   };
 
   useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
-    // prepare();
+    // async function prepare() {
+    //   await SplashScreen.preventAutoHideAsync();
+    // }
+    // // prepare();
     getHour();
     getMinute();
     getSecond();
@@ -89,10 +78,29 @@ const Screen1 = () => {
 
       <View style={styles.bottomButtons}>
         <TouchableOpacity>
-          <Text style={styles.button}>+</Text>
+          {/* <Text style={styles.button}> */}
+          <AntDesign
+            name="clockcircleo"
+            size={24}
+            onPress={() => {
+              showPage("clock");
+            }}
+            color="black"
+            style={styles.buttonActive}
+          />
+          {/* </Text> */}
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles.button}>-</Text>
+          {/* <Text style={styles.button}>-</Text> */}
+          <MaterialIcons
+            name="timer"
+            size={24}
+            onPress={() => {
+              showPage("timer");
+            }}
+            color="black"
+            style={styles.button}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -138,17 +146,44 @@ const styles = StyleSheet.create({
     // position: "absolute",
     // bottom: 0,
   },
-  button: {
-    color: "white",
+  buttonActive: {
+    // color: "white",
     fontSize: 40,
     margin: 20,
+    color: "black",
     marginHorizontal: 20,
-    // padding: 10,
+    padding: 10,
     borderRadius: 90,
     backgroundColor: "#ccc",
     width: 60,
     height: 60,
     textAlign: "center",
+    // flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    borderWidth: 5,
+    borderColor: "red",
+
+    // paddingHorizontal: 30,
+  },
+  button: {
+    // color: "white",
+    fontSize: 40,
+    margin: 20,
+    color: "black",
+    marginHorizontal: 20,
+    padding: 10,
+    borderRadius: 90,
+    backgroundColor: "#ccc",
+    width: 60,
+    height: 60,
+    backgroundColor: "#aa9",
+    textAlign: "center",
+    // flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
 
     // paddingHorizontal: 30,
   },
