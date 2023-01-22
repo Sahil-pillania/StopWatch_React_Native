@@ -13,57 +13,100 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { useFonts } from "expo-font";
-// import AppLoading from "expo-app-loading";
-import * as SplashScreen from "expo-splash-screen";
-
 const Screen2 = ({ navigation }) => {
-  //   const [appIsReady, setAppIsReady] = useState(false);
-  let [fontsloaded] = useFonts({
-    // Overpass_400Regular,
-    // Overpass_500Medium,
-    Regular: require("../assets/fonts/Prompt-Regular.ttf"),
-    Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
-  });
+  const [hour, setHour] = useState("0");
+  const [min, setMin] = useState("0");
+  const [sec, setSec] = useState("0");
+  const [interv, setInterv] = useState();
+  const [timerStart, setTimerStart] = useState(0);
+  const [stopped, setStopped] = useState(0);
 
-  if (fontsloaded) {
-    //   return SplashScreen.hideAsync();
-    // return undefined;
-  }
-
-  const [number, setHour] = useState("12");
-  const [min, setMin] = useState("12");
-  const [sec, setSec] = useState("12");
-  const [time, setTime] = useState("gg");
+  let currSec = sec;
+  let currMin = min;
+  let currHour = hour;
 
   const showPage = (page) => {
     console.log(page);
     navigation.navigate(page);
   };
 
+  const updateTimer = () => {
+    currSec++;
+
+    if (currSec == 60) {
+      currSec = 0;
+      currMin++;
+    }
+    if (currMin == 60) {
+      currMin = 0;
+      currSec = 0;
+      currHour++;
+    }
+
+    setHour(currHour), setMin(currMin), setSec(currSec);
+  };
+
+  const startTimer = () => {
+    setTimerStart(1);
+    setStopped(0);
+    updateTimer();
+    // console.log("Start timer");
+    setInterv(
+      setInterval(() => {
+        updateTimer();
+      }, 1000)
+    );
+  };
+  const stopTimer = () => {
+    setStopped(1);
+    clearInterval(interv);
+  };
+  const resetTimer = () => {
+    setTimerStart(0);
+    stopTimer();
+    setHour("0"), setMin("0"), setSec("0");
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#000" />
       <Text style={styles.number}>
-        {number}
+        {currHour > 9 ? hour : "0" + currHour}
         <Text style={styles.small}>Hr</Text>
       </Text>
       <Text style={styles.number}>
-        {min}
+        {currMin > 9 ? currMin : "0" + currMin}
         <Text style={styles.small}>Min</Text>
       </Text>
       <Text style={styles.number2}>
-        {sec}
+        {currSec > 9 ? currSec : "0" + currSec}
         <Text style={styles.small}>Sec</Text>
       </Text>
-      <View style={styles.startStop}>
-        <TouchableOpacity>
-          <Text style={styles.start}>Start</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text style={styles.stop}> Stop </Text>
-        </TouchableOpacity>
-      </View>
+      {timerStart == 0 ? (
+        <View style={styles.startStop}>
+          <TouchableOpacity onPress={() => startTimer()}>
+            <Text style={styles.start}>Start</Text>
+          </TouchableOpacity>
+          {/* <TouchableOpacity onPress={() => stopTimer()}>
+            <Text style={styles.stop}> Stop </Text>
+          </TouchableOpacity> */}
+        </View>
+      ) : (
+        <View style={styles.startStop}>
+          <TouchableOpacity onPress={() => resetTimer()}>
+            <Text style={styles.reset}>Reset</Text>
+          </TouchableOpacity>
+          {stopped == 0 ? (
+            <TouchableOpacity onPress={() => stopTimer()}>
+              <Text style={styles.stop}> Stop </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => startTimer()}>
+              <Text style={styles.stop}> Continue </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
 
       <View style={styles.bottomButtons}>
         <TouchableOpacity>
@@ -132,6 +175,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 25,
     padding: 20,
+    color: "red",
   },
   startStop: {
     flexDirection: "row",
@@ -140,6 +184,16 @@ const styles = StyleSheet.create({
     // marginBottom: 150,
   },
   start: {
+    color: "black",
+    backgroundColor: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    margin: 1,
+    borderRadius: 15,
+  },
+  reset: {
     color: "black",
     backgroundColor: "white",
     fontSize: 20,
@@ -177,7 +231,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     padding: 10,
     borderRadius: 90,
-    backgroundColor: "#ccc",
+    backgroundColor: "#fff",
     width: 60,
     height: 60,
     textAlign: "center",
